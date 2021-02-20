@@ -24,5 +24,40 @@ namespace Proyecto_WPF__II_
         {
             InitializeComponent();
         }
+
+        private void CreaVentana(Window window)
+        {
+            window.Owner = this;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Show();
+        }
+
+        private void VerCarteleraCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            CreaVentana(new Cartelera());
+        }
+
+        private void AyudaCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+
+        private void GestionarSalasSesionesCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            SalasSesiones window = new SalasSesiones();
+            window.Owner = this;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Show();
+        }
+
+        private void VenderEntradasCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            CreaVentana(new VentaEntradas());
+        }
+
+        private void ConsultarOcupacionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            CreaVentana(new Ocupacion());
+        }
     }
 }

@@ -5,8 +5,52 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Proyecto_WPF__II_"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Icon="assets/app.ico"
+        Title="Cine"
+        Height="450"
+        Width="800">
+    <Window.CommandBindings>
+        <CommandBinding Command="local:Comandos.VerCartelera"
+                        Executed="VerCarteleraCommandBinding_Executed" />
+        <CommandBinding Command="local:Comandos.GestionarSalasSesiones"
+                        Executed="GestionarSalasSesionesCommandBinding_Executed" />
+        <CommandBinding Command="local:Comandos.VenderEntradas"
+                        Executed="VenderEntradasCommandBinding_Executed" />
+        <CommandBinding Command="local:Comandos.ConsultarOcupacion"
+                        Executed="ConsultarOcupacionCommandBinding_Executed" />
+        <CommandBinding Command="local:Comandos.Ayuda"
+                        Executed="AyudaCommandBinding_Executed" />
+    </Window.CommandBindings>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Gestion">
+                <MenuItem Command="local:Comandos.VerCartelera">
+                    <MenuItem.Icon>
+                        <Image Source="assets/cartelera.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="local:Comandos.GestionarSalasSesiones">
+                    <MenuItem.Icon>
+                        <Image Source="assets/sesiones.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Taquilla">
+                <MenuItem Command="local:Comandos.VenderEntradas">
+                    <MenuItem.Icon>
+                        <Image Source="assets/venta.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="local:Comandos.ConsultarOcupacion">
+                    <MenuItem.Icon>
+                        <Image Source="assets/ocupacion.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Command="local:Comandos.Ayuda">
+            </MenuItem>
+        </Menu>
+        <Image Source="assets/fondo.jpg"
+               Stretch="UniformToFill" />
+    </DockPanel>
 </Window>
