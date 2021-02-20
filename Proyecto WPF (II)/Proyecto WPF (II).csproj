@@ -110,6 +110,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modelo\Pelicula.cs" />
+    <Compile Include="Modelo\Sala.cs" />
+    <Compile Include="Modelo\Sesion.cs" />
+    <Compile Include="Modelo\Venta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
