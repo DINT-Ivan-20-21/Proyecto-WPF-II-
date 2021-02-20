@@ -62,35 +62,7 @@ namespace Proyecto_WPF__II_.Servicio
             _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
-            _comando.CommandText = "SELECT * FROM peliculas";
-            SqliteDataReader lector = _comando.ExecuteReader();
-
-            ObservableCollection<Sesion> sesiones = new ObservableCollection<Sesion>();
-            if (lector.HasRows)
-            {
-                while (lector.Read())
-                {
-                    sesiones.Add(new Sesion(
-                        lector.GetInt32(0),
-                        BuscaPelicula(lector.GetInt32(1)),
-                        BuscaSala(lector.GetInt32(2)),
-                        DateTime.Parse(lector.GetString(3))
-                        ));
-                }
-            }
-            _conexion.Close();
-
-            return sesiones;
-        }
-
-        public ObservableCollection<Sesion> LeerSesiones(int idSala)
-        {
-            _conexion.Open();
-            SqliteCommand _comando = _conexion.CreateCommand();
-
-            _comando.CommandText = "SELECT * FROM peliculas WHERE sala = @id";
-            _comando.Parameters.Add("@id", SqliteType.Integer);
-            _comando.Parameters["@id"].Value = idSala;
+            _comando.CommandText = "SELECT * FROM sesiones";
             SqliteDataReader lector = _comando.ExecuteReader();
 
             ObservableCollection<Sesion> sesiones = new ObservableCollection<Sesion>();
@@ -116,7 +88,7 @@ namespace Proyecto_WPF__II_.Servicio
             _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
-            _comando.CommandText = "SELECT * FROM peliculas";
+            _comando.CommandText = "SELECT * FROM salas";
             SqliteDataReader lector = _comando.ExecuteReader();
 
             ObservableCollection<Sala> salas = new ObservableCollection<Sala>();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Proyecto_WPF__II_.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,12 @@ namespace Proyecto_WPF__II_
     /// </summary>
     public partial class SalasSesiones : Window
     {
+        private ViewModelSalasSesiones _vm;
         public SalasSesiones()
         {
+            _vm = new ViewModelSalasSesiones();
             InitializeComponent();
+            DataContext = _vm;
         }
     }
 }

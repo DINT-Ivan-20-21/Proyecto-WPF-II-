@@ -26,17 +26,10 @@ namespace Proyecto_WPF__II_
             CreaVentana(new Cartelera());
         }
 
-        private void AyudaCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         private void GestionarSalasSesionesCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            SalasSesiones window = new SalasSesiones();
-            window.Owner = this;
-            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Show();
+            CreaVentana(new SalasSesiones());
         }
 
         private void VenderEntradasCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -47,6 +40,11 @@ namespace Proyecto_WPF__II_
         private void ConsultarOcupacionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             CreaVentana(new Ocupacion());
+        }
+
+        private void AyudaCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

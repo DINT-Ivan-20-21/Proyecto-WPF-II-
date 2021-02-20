@@ -3,10 +3,158 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Proyecto_WPF__II_"
+        xmlns:modelo="clr-namespace:Proyecto_WPF__II_.Modelo"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="SalasSesiones" Height="450" Width="800">
+        Icon="assets/app.ico"
+        Title="Administración de salas y sesiones"
+        Height="450"
+        MinHeight="450"
+        Width="800"
+        MinWidth="800">
+    <Window.Resources>
+        <!-- Botonera -->
+        <Style x:Key="Botones"
+               TargetType="StackPanel">
+            <Setter Property="Orientation"
+                    Value="Horizontal" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Left" />
+            <Setter Property="Margin"
+                    Value="5" />
+        </Style>
+
+        <!-- Botones -->
+        <Style BasedOn="{StaticResource {x:Type Button}}"
+               TargetType="Button">
+            <Setter Property="Margin"
+                    Value="0,0,5,0" />
+        </Style>
+
+        <!-- TextBox -->
+        <Style BasedOn="{StaticResource {x:Type TextBox}}"
+               TargetType="TextBox">
+            <Setter Property="Margin"
+                    Value="0,10" />
+        </Style>
+
+        <!-- DataGid -->
+        <Style TargetType="DataGrid"
+               BasedOn="{StaticResource {x:Type DataGrid}}">
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="IsReadOnly"
+                    Value="True" />
+            <Setter Property="AutoGenerateColumns"
+                    Value="False" />
+            <Setter Property="CanUserAddRows"
+                    Value="False" />
+            <Setter Property="CanUserDeleteRows"
+                    Value="False" />
+            <Setter Property="SelectionMode"
+                    Value="Single" />
+            <Setter Property="SelectionUnit"
+                    Value="FullRow" />
+        </Style>
+
+        <DataTemplate DataType="{x:Type modelo:Pelicula}">
+            <StackPanel Orientation="Vertical"
+                        Width="40"
+                        Height="60">
+                <Image Source="{Binding Cartel}" />
+                <TextBlock Text="{Binding Titulo}" />
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <!-- Salas -->
+        <DockPanel Grid.Row="0">
+            <DockPanel DockPanel.Dock="Bottom">
+                <StackPanel Style="{StaticResource Botones}">
+                    <Button Content="Añadir" />
+                    <Button Content="Modificar" />
+                </StackPanel>
+                <Button Content="Insertar"
+                        HorizontalAlignment="Right" />
+            </DockPanel>
+            <StackPanel Orientation="Vertical"
+                        DockPanel.Dock="Right"
+                        Width="230"
+                        Margin="5,0"
+                        VerticalAlignment="Center">
+                <TextBox materialDesign:HintAssist.Hint="Número"
+                         Text="{Binding Path=SalaFormulario.Numero}" />
+                <TextBox materialDesign:HintAssist.Hint="Capacidad"
+                         Text="{Binding Path=SalaFormulario.Capacidad}" />
+                <StackPanel Orientation="Horizontal"
+                            Margin="0,10">
+                    <TextBlock Text="Disponible"
+                               Margin="0,0,5,0" />
+                    <CheckBox IsChecked="{Binding Path=SalaFormulario.Disponible}" />
+                </StackPanel>
+
+            </StackPanel>
+            <DataGrid ItemsSource="{Binding Path=Salas}"
+                      SelectedItem="{Binding Path=SalaSeleccionada}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Número"
+                                        Width="*"
+                                        Binding="{Binding Path=Numero}" />
+                    <DataGridTextColumn Header="Capacidad"
+                                        Width="*"
+                                        Binding="{Binding Path=Capacidad}" />
+                    <DataGridCheckBoxColumn Header="Disponible"
+                                            Width="*"
+                                            Binding="{Binding Path=Disponible}" />
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </DockPanel>
+        <!-- Sesiones -->
+        <DockPanel Grid.Row="1">
+            <DockPanel DockPanel.Dock="Bottom">
+                <StackPanel Style="{StaticResource Botones}">
+                    <Button Content="Añadir" />
+                    <Button Content="Modificar" />
+                    <Button Content="Eliminar" />
+                </StackPanel>
+                <Button Content="Insertar"
+                        HorizontalAlignment="Right" />
+            </DockPanel>
+            <StackPanel Orientation="Vertical"
+                        DockPanel.Dock="Right"
+                        Width="230"
+                        Margin="5,0"
+                        VerticalAlignment="Center">
+                <materialDesign:TimePicker materialDesign:HintAssist.Hint="Seleccione la hora"
+                                           SelectedTime="{Binding Path=SesionFormulario.Hora}"
+                                           Margin="0,0,0,10" />
+                <ListBox ItemsSource="{Binding Path=Peliculas}"
+                         SelectedItem="{Binding Path=SesionFormulario.Pelicula}"
+                         Height="100"
+                         ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </StackPanel>
+            <DataGrid ItemsSource="{Binding Path=Sesiones}"
+                      SelectedItem="{Binding Path=SesionSeleccionada}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Película"
+                                        Width="*"
+                                        Binding="{Binding Path=Pelicula.Nombre}" />
+                    <DataGridTextColumn Header="Hora"
+                                        Width="*"
+                                        Binding="{Binding Path=Hora}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
     </Grid>
 </Window>

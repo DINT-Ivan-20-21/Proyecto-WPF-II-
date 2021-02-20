@@ -111,6 +111,7 @@
       <DependentUpon>VentaEntradas.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\ViewModelCartelera.cs" />
+    <Compile Include="ViewModel\ViewModelSalasSesiones.cs" />
     <Page Include="Cartelera.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
