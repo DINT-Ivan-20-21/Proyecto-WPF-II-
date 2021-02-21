@@ -11,14 +11,14 @@
         MinWidth="800"
         Width="800">
     <Grid>
-        <DataGrid x:Name="datos"
-                  Margin="10"
+        <DataGrid Margin="10"
                   IsReadOnly="True"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   SelectionMode="Single"
                   SelectionUnit="FullRow"
+                  CanUserSortColumns="True"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                   ItemsSource="{Binding Path=Peliculas}">
             <DataGrid.Columns>

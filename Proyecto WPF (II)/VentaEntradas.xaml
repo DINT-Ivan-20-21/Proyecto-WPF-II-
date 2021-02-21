@@ -3,10 +3,119 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Proyecto_WPF__II_"
+        xmlns:modelo="clr-namespace:Proyecto_WPF__II_.Modelo"
+        xmlns:comando="clr-namespace:Proyecto_WPF__II_.Comando"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="VentaEntradas" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Icon="assets/app.ico"
+        Title="Venta de entradas"
+        MinHeight="450"
+        Height="450"
+        MinWidth="800"
+        Width="800">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="comando:ComandosVentaEntradas.Limpiar"
+                        Executed="LimpiarCommandBinding_Executed"
+                        CanExecute="LimpiarCommandBinding_CanExecute" />
+        <CommandBinding Command="comando:ComandosVentaEntradas.Vender"
+                        Executed="VenderCommandBinding_Executed"
+                        CanExecute="VenderCommandBinding_CanExecute" />
+    </Window.CommandBindings>
+    <Window.Resources>
+
+        <!-- Texblock etiqueta-->
+        <Style x:Key="Etiqueta"
+               TargetType="TextBlock"
+               BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Margin"
+                    Value="0,0,0,5" />
+        </Style>
+
+        <!-- DataTemplate pelicula-->
+        <DataTemplate DataType="{x:Type modelo:Pelicula}">
+            <DockPanel Width="165">
+                <Viewbox DockPanel.Dock="Bottom"
+                         Height="20">
+                    <TextBlock Text="{Binding Titulo}"
+                               FontSize="16"
+                               TextAlignment="Center"
+                               VerticalAlignment="Bottom"
+                               FontWeight="Bold"
+                               Foreground="SlateGray" />
+                </Viewbox>
+                <Grid>
+                    <Image Height="250"
+                           Source="{Binding Cartel}"
+                           Stretch="UniformToFill" />
+                    <Border BorderBrush="DarkSlateGray"
+                            BorderThickness="3"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            Background="White"
+                            Margin="5">
+                        <TextBlock Margin="5"
+                                   Text="{Binding Calificacion}"
+                                   Foreground="DarkSlateGray"
+                                   FontWeight="Bold" />
+                    </Border>
+                </Grid>
+            </DockPanel>
+        </DataTemplate>
+    </Window.Resources>
+    <DockPanel>
+        <!-- Botonera -->
+        <DockPanel DockPanel.Dock="Bottom"
+                   Margin="5">
+            <Button Content="Limpiar"
+                    Command="comando:ComandosVentaEntradas.Limpiar" />
+            <Button Content="Confirmar venta"
+                    Command="comando:ComandosVentaEntradas.Vender"
+                    HorizontalAlignment="Right" />
+        </DockPanel>
+        <!-- Formulario -->
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Right"
+                        Width="200"
+                        Margin="5">
+                <TextBlock Style="{StaticResource Etiqueta}"
+                           Text="Selecciona la sesión" />
+                <ComboBox ItemsSource="{Binding Path=Sesiones}"
+                          SelectedItem="{Binding Path=SesionSeleccionada}"
+                          Margin="0,0,0,10">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Hora.TimeOfDay}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <StackPanel IsEnabled="{Binding Path=Disponibles}">
+                    <TextBlock Style="{StaticResource Etiqueta}">
+                    <Run Text="Hay " />
+                    <Run Text="{Binding Path=Disponibles}"
+                         FontWeight="Black" />
+                    <Run Text=" entradas disponibles" />
+                    </TextBlock>
+                    <TextBox materialDesign:HintAssist.Hint="Cantidad"
+                             Text="{Binding Path=VentaFormulario.Cantidad, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,10" />
+
+                    <TextBlock Style="{StaticResource Etiqueta}"
+                               Text="Forma de pago" />
+                    <ComboBox ItemsSource="{Binding Path=FormasPago}"
+                              SelectedItem="{Binding Path=VentaFormulario.Pago}" />
+                </StackPanel>
+            </StackPanel>
+            <ListBox  ItemsSource="{Binding Path=Peliculas}"
+                      SelectedValue="{Binding Path=PeliculaSeleccionada}"
+                      SelectionChanged="ListBox_SelectionChanged">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+        </DockPanel>
+    </DockPanel>
 </Window>

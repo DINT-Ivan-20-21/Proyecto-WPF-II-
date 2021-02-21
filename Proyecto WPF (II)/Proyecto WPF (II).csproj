@@ -102,6 +102,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Comando\ComandosSalasSesiones.cs" />
+    <Compile Include="Comando\ComandosVentaEntradas.cs" />
     <Compile Include="SalasSesiones.xaml.cs">
       <DependentUpon>SalasSesiones.xaml</DependentUpon>
     </Compile>
@@ -111,7 +113,9 @@
       <DependentUpon>VentaEntradas.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\ViewModelCartelera.cs" />
+    <Compile Include="ViewModel\ViewModelOcupacion.cs" />
     <Compile Include="ViewModel\ViewModelSalasSesiones.cs" />
+    <Compile Include="ViewModel\ViewModelVentaEntradas.cs" />
     <Page Include="Cartelera.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -127,7 +131,7 @@
     <Compile Include="Cartelera.xaml.cs">
       <DependentUpon>Cartelera.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Comandos.cs" />
+    <Compile Include="Comando\ComandosMainWindow.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -137,8 +141,8 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SalasSesiones.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="VentaEntradas.xaml">
       <SubType>Designer</SubType>

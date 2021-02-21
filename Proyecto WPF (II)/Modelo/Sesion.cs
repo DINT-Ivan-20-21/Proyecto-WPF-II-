@@ -14,6 +14,11 @@ namespace Proyecto_WPF__II_.Modelo
         {
         }
 
+        public Sesion(Sala sala)
+        {
+            Sala = sala;
+        }
+
         public Sesion(int id, Pelicula pelicula, Sala sala, DateTime hora)
         {
             Id = id;

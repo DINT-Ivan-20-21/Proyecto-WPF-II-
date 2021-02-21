@@ -26,7 +26,6 @@ namespace Proyecto_WPF__II_
             CreaVentana(new Cartelera());
         }
 
-
         private void GestionarSalasSesionesCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             CreaVentana(new SalasSesiones());

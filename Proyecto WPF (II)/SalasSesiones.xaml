@@ -4,14 +4,39 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:modelo="clr-namespace:Proyecto_WPF__II_.Modelo"
+        xmlns:local="clr-namespace:Proyecto_WPF__II_"
+        xmlns:comando="clr-namespace:Proyecto_WPF__II_.Comando"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Icon="assets/app.ico"
         Title="Administración de salas y sesiones"
-        Height="450"
         MinHeight="450"
-        Width="800"
-        MinWidth="800">
+        Height="450"
+        MinWidth="800"
+        Width="800">
+    <Window.CommandBindings>
+        <CommandBinding Command="comando:ComandosSalasSesiones.InsertarSala"
+                        Executed="InsertarSalaCommandBinding_Executed"
+                        CanExecute="InsertarSalaCommandBinding_CanExecute" />
+        <CommandBinding Command="comando:ComandosSalasSesiones.ModificarSala"
+                        Executed="ModificarSalaCommandBinding_Executed"
+                        CanExecute="UsarSalaCommandBinding_CanExecute" />
+        <CommandBinding Command="comando:ComandosSalasSesiones.AñadirSala"
+                        Executed="AñadirSalaCommandBinding_Executed" />
+
+        <CommandBinding Command="comando:ComandosSalasSesiones.InsertarSesion"
+                        Executed="InsertarSesionCommandBinding_Executed"
+                        CanExecute="InsertarSesionCommandBinding_CanExecute" />
+        <CommandBinding Command="comando:ComandosSalasSesiones.ModificarSesion"
+                        Executed="ModificarSesionCommandBinding_Executed"
+                        CanExecute="UsarSesionCommandBinding_CanExecute" />
+        <CommandBinding Command="comando:ComandosSalasSesiones.AñadirSesion"
+                        Executed="AñadirSesionCommandBinding_Executed"
+                        CanExecute="UsarSesionCommandBinding_CanExecute" />
+        <CommandBinding Command="comando:ComandosSalasSesiones.EliminarSesion"
+                        Executed="EliminarSesionCommandBinding_Executed"
+                        CanExecute="UsarSesionCommandBinding_CanExecute" />
+    </Window.CommandBindings>
     <Window.Resources>
         <!-- Botonera -->
         <Style x:Key="Botones"
@@ -57,14 +82,45 @@
                     Value="FullRow" />
         </Style>
 
+        <!-- DataTemplate pelicula-->
         <DataTemplate DataType="{x:Type modelo:Pelicula}">
-            <StackPanel Orientation="Vertical"
-                        Width="40"
-                        Height="60">
-                <Image Source="{Binding Cartel}" />
-                <TextBlock Text="{Binding Titulo}" />
-            </StackPanel>
+            <DockPanel Height="90"
+                       Width="200">
+                <Viewbox DockPanel.Dock="Bottom"
+                         Height="20">
+                    <TextBlock Text="{Binding Titulo}"
+                               FontSize="16"
+                               TextAlignment="Center"
+                               VerticalAlignment="Bottom"
+                               FontWeight="Bold"
+                               Foreground="SlateGray" />
+                </Viewbox>
+
+                <Image Source="{Binding Cartel}"
+                       Stretch="Uniform" />
+
+            </DockPanel>
         </DataTemplate>
+
+        <Style x:Key="MensajeMaximo"
+               TargetType="TextBlock"
+               BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Visibility"
+                    Value="Hidden" />
+            <Setter Property="Foreground"
+                    Value="IndianRed" />
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+            <Setter Property="Margin"
+                    Value="0,0,5,0" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Maximo}"
+                             Value="true">
+                    <Setter Property="Visibility"
+                            Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -75,21 +131,26 @@
         <DockPanel Grid.Row="0">
             <DockPanel DockPanel.Dock="Bottom">
                 <StackPanel Style="{StaticResource Botones}">
-                    <Button Content="Añadir" />
-                    <Button Content="Modificar" />
+                    <Button Content="Añadir"
+                            Command="comando:ComandosSalasSesiones.AñadirSala" />
+                    <Button Content="Modificar"
+                            Command="comando:ComandosSalasSesiones.ModificarSala" />
                 </StackPanel>
                 <Button Content="Insertar"
+                        Command="comando:ComandosSalasSesiones.InsertarSala"
                         HorizontalAlignment="Right" />
             </DockPanel>
             <StackPanel Orientation="Vertical"
                         DockPanel.Dock="Right"
                         Width="230"
-                        Margin="5,0"
-                        VerticalAlignment="Center">
+                        Margin="5,5"
+                        VerticalAlignment="Top">
+                <TextBlock Text="{Binding Path=ModoSala}"
+                           TextAlignment="Center" />
                 <TextBox materialDesign:HintAssist.Hint="Número"
                          Text="{Binding Path=SalaFormulario.Numero}" />
                 <TextBox materialDesign:HintAssist.Hint="Capacidad"
-                         Text="{Binding Path=SalaFormulario.Capacidad}" />
+                         Text="{Binding Path=SalaFormulario.Capacidad, UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel Orientation="Horizontal"
                             Margin="0,10">
                     <TextBlock Text="Disponible"
@@ -118,41 +179,48 @@
         <DockPanel Grid.Row="1">
             <DockPanel DockPanel.Dock="Bottom">
                 <StackPanel Style="{StaticResource Botones}">
-                    <Button Content="Añadir" />
-                    <Button Content="Modificar" />
-                    <Button Content="Eliminar" />
+                    <Button Content="Añadir"
+                            Command="comando:ComandosSalasSesiones.AñadirSesion" />
+                    <Button Content="Modificar"
+                            Command="comando:ComandosSalasSesiones.ModificarSesion" />
+                    <Button Content="Eliminar"
+                            Command="comando:ComandosSalasSesiones.EliminarSesion" />
                 </StackPanel>
-                <Button Content="Insertar"
-                        HorizontalAlignment="Right" />
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <TextBlock Style="{StaticResource MensajeMaximo}" Text="*Una sala no puede tener más de 3 sesiones" />
+                    <Button Content="Insertar"
+                            Command="comando:ComandosSalasSesiones.InsertarSesion" />
+                </StackPanel>
+
             </DockPanel>
-            <StackPanel Orientation="Vertical"
-                        DockPanel.Dock="Right"
-                        Width="230"
-                        Margin="5,0"
-                        VerticalAlignment="Center">
-                <materialDesign:TimePicker materialDesign:HintAssist.Hint="Seleccione la hora"
+            <DockPanel DockPanel.Dock="Right"
+                       Width="230"
+                       Margin="5,5">
+                <TextBlock DockPanel.Dock="Top"
+                           Text="{Binding Path=ModoSala}"
+                           TextAlignment="Center" />
+                <materialDesign:TimePicker DockPanel.Dock="Top"
+                                           materialDesign:HintAssist.Hint="Seleccione la hora"
+                                           Is24Hours="True"
                                            SelectedTime="{Binding Path=SesionFormulario.Hora}"
-                                           Margin="0,0,0,10" />
+                                           Margin="0,5,0,0" />
                 <ListBox ItemsSource="{Binding Path=Peliculas}"
                          SelectedItem="{Binding Path=SesionFormulario.Pelicula}"
-                         Height="100"
-                         ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                </ListBox>
-            </StackPanel>
+                         ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                         ScrollViewer.VerticalScrollBarVisibility="Visible"
+                         Margin="0,5,0,0" />
+
+            </DockPanel>
             <DataGrid ItemsSource="{Binding Path=Sesiones}"
                       SelectedItem="{Binding Path=SesionSeleccionada}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Película"
                                         Width="*"
-                                        Binding="{Binding Path=Pelicula.Nombre}" />
+                                        Binding="{Binding Path=Pelicula.Titulo}" />
                     <DataGridTextColumn Header="Hora"
                                         Width="*"
-                                        Binding="{Binding Path=Hora}" />
+                                        Binding="{Binding Path=Hora.TimeOfDay}" />
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

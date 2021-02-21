@@ -1,17 +1,6 @@
 ﻿using Proyecto_WPF__II_.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Proyecto_WPF__II_
 {
@@ -26,6 +15,56 @@ namespace Proyecto_WPF__II_
             _vm = new ViewModelSalasSesiones();
             InitializeComponent();
             DataContext = _vm;
+        }
+
+        private void InsertarSalaCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            _vm.InsertarSala();
+        }
+        private void AñadirSalaCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            _vm.ModoSala = ViewModelSalasSesiones.Modo.Añadir;
+        }
+        private void ModificarSalaCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            _vm.ModoSala = ViewModelSalasSesiones.Modo.Modificar;
+        }
+
+        private void InsertarSesionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            _vm.InsertarSesion();
+        }
+        private void AñadirSesionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            _vm.ModoSesion = ViewModelSalasSesiones.Modo.Añadir;
+        }
+        private void ModificarSesionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            _vm.ModoSesion = ViewModelSalasSesiones.Modo.Modificar;
+        }
+        private void EliminarSesionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            _vm.EliminarSesion();
+        }
+
+        private void InsertarSalaCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _vm.PuedeInsertarSala();
+        }
+
+        private void InsertarSesionCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _vm.PuedeInsertarSesion();
+        }
+
+        private void UsarSesionCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _vm.PuedeUsarSesion();
+        }
+
+        private void UsarSalaCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _vm.PuedeUsarSala();
         }
     }
 }

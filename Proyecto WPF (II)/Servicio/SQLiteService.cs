@@ -12,25 +12,30 @@ namespace Proyecto_WPF__II_.Servicio
         public SQLiteService()
         {
             _conexion = new SqliteConnection("Data Source=cine.db");
-        }
 
-        public ObservableCollection<Pelicula> LeerPeliculas()
-        {
             //Comprobamos si es la primera ejecucion
             if (DateTime.Parse(Properties.Settings.Default.lastUpdate).Date != DateTime.Now.Date)
             {
+
+                //Cogemos las peliculas nuevas
                 foreach (Pelicula pelicula in ApiRestService.GetCartelera())
                 {
                     if (BuscaPelicula(pelicula.Id) == null)
                     {
                         Insertar(pelicula);
                     }
-                    Properties.Settings.Default.lastUpdate = DateTime.Now.ToShortDateString();
-                    Properties.Settings.Default.Save();
                 }
-            }
 
-            //Leemos las películas
+                //Borrarmos las ventas
+                EliminarVentas();
+
+                Properties.Settings.Default.lastUpdate = DateTime.Now.ToShortDateString();
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public ObservableCollection<Pelicula> LeerPeliculas()
+        {
             _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
@@ -74,7 +79,65 @@ namespace Proyecto_WPF__II_.Servicio
                         lector.GetInt32(0),
                         BuscaPelicula(lector.GetInt32(1)),
                         BuscaSala(lector.GetInt32(2)),
-                        DateTime.Parse(lector.GetString(3))
+                        lector.GetDateTime(3)
+                        ));
+                }
+            }
+            _conexion.Close();
+
+            return sesiones;
+        }
+
+        public ObservableCollection<Sesion> BuscaSesionesPorSala(int id)
+        {
+            _conexion.Open();
+            SqliteCommand _comando = _conexion.CreateCommand();
+
+            _comando.CommandText = "SELECT * FROM sesiones WHERE sala = @id";
+            _comando.Parameters.Add("@id", SqliteType.Integer);
+            _comando.Parameters["@id"].Value = id;
+
+            SqliteDataReader lector = _comando.ExecuteReader();
+
+            ObservableCollection<Sesion> sesiones = new ObservableCollection<Sesion>();
+            if (lector.HasRows)
+            {
+                while (lector.Read())
+                {
+                    sesiones.Add(new Sesion(
+                        lector.GetInt32(0),
+                        BuscaPelicula(lector.GetInt32(1)),
+                        BuscaSala(lector.GetInt32(2)),
+                        lector.GetDateTime(3)
+                        ));
+                }
+            }
+            _conexion.Close();
+
+            return sesiones;
+        }
+
+        public ObservableCollection<Sesion> BuscaSesionesPorPelicula(int id)
+        {
+            _conexion.Open();
+            SqliteCommand _comando = _conexion.CreateCommand();
+
+            _comando.CommandText = "SELECT * FROM sesiones JOIN salas ON sesiones.sala = salas.idSala WHERE pelicula = @id AND disponible = true";
+            _comando.Parameters.Add("@id", SqliteType.Integer);
+            _comando.Parameters["@id"].Value = id;
+
+            SqliteDataReader lector = _comando.ExecuteReader();
+
+            ObservableCollection<Sesion> sesiones = new ObservableCollection<Sesion>();
+            if (lector.HasRows)
+            {
+                while (lector.Read())
+                {
+                    sesiones.Add(new Sesion(
+                        lector.GetInt32(0),
+                        BuscaPelicula(lector.GetInt32(1)),
+                        BuscaSala(lector.GetInt32(2)),
+                        lector.GetDateTime(3)
                         ));
                 }
             }
@@ -136,9 +199,8 @@ namespace Proyecto_WPF__II_.Servicio
         }
 
 
-        public Pelicula BuscaPelicula(int id)
+        private Pelicula BuscaPelicula(int id)
         {
-            _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
             _comando.CommandText = "SELECT * FROM peliculas WHERE idPelicula = @id";
@@ -160,14 +222,12 @@ namespace Proyecto_WPF__II_.Servicio
                      lector.GetString(5)
                      );
             }
-            _conexion.Close();
 
             return pelicula;
         }
 
-        public Sala BuscaSala(int id)
+        private Sala BuscaSala(int id)
         {
-            _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
             _comando.CommandText = "SELECT * FROM salas WHERE idSala = @id";
@@ -187,14 +247,12 @@ namespace Proyecto_WPF__II_.Servicio
                      lector.GetBoolean(3)
                      );
             }
-            _conexion.Close();
 
             return sala;
         }
 
-        public Sesion BuscaSesion(int id)
+        private Sesion BuscaSesion(int id)
         {
-            _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
             _comando.CommandText = "SELECT * FROM sesiones WHERE idSesion = @id";
@@ -214,7 +272,6 @@ namespace Proyecto_WPF__II_.Servicio
                      DateTime.Parse(lector.GetString(3))
                      );
             }
-            _conexion.Close();
 
             return sesion;
         }
@@ -247,15 +304,13 @@ namespace Proyecto_WPF__II_.Servicio
             _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
-            _comando.CommandText = "INSERT INTO sesiones VALUES (@id, @pelicula, @sala, @hora)";
-            _comando.Parameters.Add("@id", SqliteType.Integer);
+            _comando.CommandText = "INSERT INTO sesiones VALUES (null, @pelicula, @sala, @hora)";
             _comando.Parameters.Add("@pelicula", SqliteType.Integer);
             _comando.Parameters.Add("@sala", SqliteType.Integer);
             _comando.Parameters.Add("@hora", SqliteType.Text);
-            _comando.Parameters["@id"].Value = sesion.Id;
             _comando.Parameters["@pelicula"].Value = sesion.Pelicula.Id;
             _comando.Parameters["@sala"].Value = sesion.Sala.Id;
-            _comando.Parameters["@hora"].Value = sesion.Hora.ToUniversalTime();
+            _comando.Parameters["@hora"].Value = sesion.Hora.ToShortTimeString();
             _comando.ExecuteNonQuery();
 
             _conexion.Close();
@@ -266,12 +321,10 @@ namespace Proyecto_WPF__II_.Servicio
             _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
-            _comando.CommandText = "INSERT INTO salas VALUES (@id, @numero, @capacidad, @disponible)";
-            _comando.Parameters.Add("@id", SqliteType.Integer);
+            _comando.CommandText = "INSERT INTO salas VALUES (null, @numero, @capacidad, @disponible)";
             _comando.Parameters.Add("@numero", SqliteType.Text);
             _comando.Parameters.Add("@capacidad", SqliteType.Integer);
             _comando.Parameters.Add("@disponible", SqliteType.Text);
-            _comando.Parameters["@id"].Value = sala.Id;
             _comando.Parameters["@numero"].Value = sala.Numero;
             _comando.Parameters["@capacidad"].Value = sala.Capacidad;
             _comando.Parameters["@disponible"].Value = sala.Disponible;
@@ -285,12 +338,10 @@ namespace Proyecto_WPF__II_.Servicio
             _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
-            _comando.CommandText = "INSERT INTO salas VALUES (@id, @sesion, @cantidad, @pago)";
-            _comando.Parameters.Add("@id", SqliteType.Integer);
+            _comando.CommandText = "INSERT INTO ventas VALUES (null, @sesion, @cantidad, @pago)";
             _comando.Parameters.Add("@sesion", SqliteType.Integer);
             _comando.Parameters.Add("@cantidad", SqliteType.Integer);
             _comando.Parameters.Add("@pago", SqliteType.Text);
-            _comando.Parameters["@id"].Value = venta.Id;
             _comando.Parameters["@sesion"].Value = venta.Sesion.Id;
             _comando.Parameters["@cantidad"].Value = venta.Cantidad;
             _comando.Parameters["@pago"].Value = venta.Pago;
@@ -304,7 +355,7 @@ namespace Proyecto_WPF__II_.Servicio
             _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
-            _comando.CommandText = "UPDATE seiones SET pelicula = @pelicula, sala = @sala, hora = @hora  WHERE idSesion=@id";
+            _comando.CommandText = "UPDATE sesiones SET pelicula = @pelicula, sala = @sala, hora = @hora  WHERE idSesion=@id";
             _comando.Parameters.Add("@id", SqliteType.Integer);
             _comando.Parameters.Add("@pelicula", SqliteType.Integer);
             _comando.Parameters.Add("@sala", SqliteType.Integer);
@@ -312,7 +363,7 @@ namespace Proyecto_WPF__II_.Servicio
             _comando.Parameters["@id"].Value = sesion.Id;
             _comando.Parameters["@pelicula"].Value = sesion.Pelicula.Id;
             _comando.Parameters["@sala"].Value = sesion.Sala.Id;
-            _comando.Parameters["@hora"].Value = sesion.Hora.ToUniversalTime();
+            _comando.Parameters["@hora"].Value = sesion.Hora.ToShortTimeString();
             _comando.ExecuteNonQuery();
 
             _conexion.Close();
@@ -337,14 +388,12 @@ namespace Proyecto_WPF__II_.Servicio
             _conexion.Close();
         }
 
-        public void Eliminar(Venta venta)
+        private void EliminarVentas()
         {
             _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
-            _comando.CommandText = "DELETE FROM ventas WHERE idVenta = @id";
-            _comando.Parameters.Add("@id", SqliteType.Integer);
-            _comando.Parameters["@id"].Value = venta.Id;
+            _comando.CommandText = "TRUNCATE TABLE ventas";
             _comando.ExecuteNonQuery();
 
             _conexion.Close();
@@ -368,13 +417,31 @@ namespace Proyecto_WPF__II_.Servicio
             _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
-            _comando.CommandText = "SELECT SUM(ventas.cantidad) FROM sesiones LEFT JOIN ventas ON sesiones.idSesion = ventas.sesion WHERE idSesion = @id";
+            _comando.CommandText = "SELECT SUM(ventas.cantidad) FROM sesiones JOIN ventas ON sesiones.idSesion = ventas.sesion WHERE idSesion = @id";
             _comando.Parameters.Add("@id", SqliteType.Integer);
             _comando.Parameters["@id"].Value = idSesion;
 
+            Object cantidad = _comando.ExecuteScalar();
+
             _conexion.Close();
 
-            return Convert.ToInt32(_comando.ExecuteScalar());
+            return cantidad is DBNull ? 0 : Convert.ToInt32(cantidad);
+        }
+
+        public bool ExisteNumeroSala(string numero)
+        {
+            _conexion.Open();
+            SqliteCommand _comando = _conexion.CreateCommand();
+
+            _comando.CommandText = "SELECT COUNT(*) FROM salas WHERE numero = @numero";
+            _comando.Parameters.Add("@numero", SqliteType.Integer);
+            _comando.Parameters["@numero"].Value = numero;
+
+            int cantidad = Convert.ToInt32(_comando.ExecuteScalar());
+
+            _conexion.Close();
+
+            return cantidad != 0;
         }
     }
 }

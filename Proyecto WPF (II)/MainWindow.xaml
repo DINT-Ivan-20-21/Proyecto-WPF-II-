@@ -3,51 +3,51 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Proyecto_WPF__II_"
+        xmlns:comando="clr-namespace:Proyecto_WPF__II_.Comando"
         mc:Ignorable="d"
         Icon="assets/app.ico"
         Title="Cine"
         Height="450"
         Width="800">
     <Window.CommandBindings>
-        <CommandBinding Command="local:Comandos.VerCartelera"
+        <CommandBinding Command="comando:ComandosMainWindow.VerCartelera"
                         Executed="VerCarteleraCommandBinding_Executed" />
-        <CommandBinding Command="local:Comandos.GestionarSalasSesiones"
+        <CommandBinding Command="comando:ComandosMainWindow.GestionarSalasSesiones"
                         Executed="GestionarSalasSesionesCommandBinding_Executed" />
-        <CommandBinding Command="local:Comandos.VenderEntradas"
+        <CommandBinding Command="comando:ComandosMainWindow.VenderEntradas"
                         Executed="VenderEntradasCommandBinding_Executed" />
-        <CommandBinding Command="local:Comandos.ConsultarOcupacion"
+        <CommandBinding Command="comando:ComandosMainWindow.ConsultarOcupacion"
                         Executed="ConsultarOcupacionCommandBinding_Executed" />
-        <CommandBinding Command="local:Comandos.Ayuda"
+        <CommandBinding Command="comando:ComandosMainWindow.Ayuda"
                         Executed="AyudaCommandBinding_Executed" />
     </Window.CommandBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Gestion">
-                <MenuItem Command="local:Comandos.VerCartelera">
+                <MenuItem Command="comando:ComandosMainWindow.VerCartelera">
                     <MenuItem.Icon>
                         <Image Source="assets/cartelera.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="local:Comandos.GestionarSalasSesiones">
+                <MenuItem Command="comando:ComandosMainWindow.GestionarSalasSesiones">
                     <MenuItem.Icon>
                         <Image Source="assets/sesiones.png" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Taquilla">
-                <MenuItem Command="local:Comandos.VenderEntradas">
+                <MenuItem Command="comando:ComandosMainWindow.VenderEntradas">
                     <MenuItem.Icon>
                         <Image Source="assets/venta.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="local:Comandos.ConsultarOcupacion">
+                <MenuItem Command="comando:ComandosMainWindow.ConsultarOcupacion">
                     <MenuItem.Icon>
                         <Image Source="assets/ocupacion.png" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Command="local:Comandos.Ayuda">
+            <MenuItem Command="comando:ComandosMainWindow.Ayuda">
             </MenuItem>
         </Menu>
         <Image Source="assets/fondo.jpg"

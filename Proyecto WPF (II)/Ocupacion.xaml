@@ -3,10 +3,39 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Proyecto_WPF__II_"
         mc:Ignorable="d"
-        Title="Ocupacion" Height="450" Width="800">
+        Icon="assets/app.ico"
+        Title="Cartelera"
+        MinHeight="450"
+        Height="450"
+        MinWidth="800"
+        Width="800">
     <Grid>
-        
+        <DataGrid Margin="10"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  SelectionMode="Single"
+                  SelectionUnit="FullRow"
+                  CanUserSortColumns="True"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ItemsSource="{Binding Path=Datos}">
+            <DataGrid.Columns>
+
+                <DataGridTextColumn Header="Sala"
+                                    Binding="{Binding Path=Sala}"
+                                    Width="*" />
+                <DataGridTextColumn Header="Hora"
+                                    Binding="{Binding Path=Hora}"
+                                    Width="*" />
+                <DataGridTextColumn Header="Título"
+                                    Binding="{Binding Path=Titulo}"
+                                    Width="1.8*" />
+                <DataGridTextColumn Header="Entradas disponibles"
+                                    Binding="{Binding Path=Disponibles}"
+                                    Width="1.2*" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
