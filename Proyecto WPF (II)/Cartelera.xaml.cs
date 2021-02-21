@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Proyecto_WPF__II_.ViewModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Proyecto_WPF__II_
 {
@@ -19,9 +8,12 @@ namespace Proyecto_WPF__II_
     /// </summary>
     public partial class Cartelera : Window
     {
+        private ViewModelCartelera _vm;
         public Cartelera()
         {
+            _vm = new ViewModelCartelera();
             InitializeComponent();
+            DataContext = _vm;
         }
     }
 }

@@ -3,10 +3,46 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Proyecto_WPF__II_"
         mc:Ignorable="d"
-        Title="Cartelera" Height="450" Width="800">
+        Icon="assets/app.ico"
+        Title="Cartelera"
+        MinHeight="450"
+        Height="450"
+        MinWidth="800"
+        Width="800">
     <Grid>
-        
+        <DataGrid x:Name="datos"
+                  Margin="10"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  SelectionMode="Single"
+                  SelectionUnit="FullRow"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ItemsSource="{Binding Path=Peliculas}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Cartel"
+                                        Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Path=Cartel}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Título"
+                                    Binding="{Binding Path=Titulo}"
+                                    Width="2*" />
+                <DataGridTextColumn Header="Año"
+                                    Binding="{Binding Path=Año}"
+                                    Width="*" />
+                <DataGridTextColumn Header="Genero"
+                                    Binding="{Binding Path=Genero}"
+                                    Width="*" />
+                <DataGridTextColumn Header="Calificación"
+                                    Binding="{Binding Path=Calificacion}"
+                                    Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
