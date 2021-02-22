@@ -41,12 +41,16 @@ namespace Proyecto_WPF__II_
 
         private void InsertarSalaCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _vm.PuedeInsertarSala();
+            e.CanExecute = _vm != null && _vm.PuedeInsertarSala();
         }
 
         private void AccionSalaCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            string mensaje = _vm.CambiarModoSala();
+            string mensaje = null;
+            if (_vm != null)
+            {
+                mensaje = _vm.CambiarModoSala();
+            }
 
             if (mensaje != null)
             {
@@ -68,14 +72,18 @@ namespace Proyecto_WPF__II_
         }
         private void InsertarSesionCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _vm.PuedeInsertarSesion();
+            e.CanExecute = _vm != null && _vm.PuedeInsertarSesion();
         }
 
         private void AccionSesionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            string mensaje = _vm.CambiarModoSesion();
+            string mensaje = null;
+            if (_vm != null)
+            {
+                mensaje = _vm.CambiarModoSesion();
+            }
 
-            if(mensaje != null)
+            if (mensaje != null)
             {
                 MostrarAdvertencia(mensaje);
             }
@@ -88,7 +96,7 @@ namespace Proyecto_WPF__II_
 
         private void EliminarSesionCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _vm.PuedeEliminarSesion();
+            e.CanExecute = _vm != null && _vm.PuedeEliminarSesion();
         }
 
         private void MostrarAdvertencia(string mensaje)

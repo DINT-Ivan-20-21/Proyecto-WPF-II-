@@ -43,7 +43,7 @@ namespace Proyecto_WPF__II_
 
         private void AyudaCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Process.Start("help.chm");
         }
     }
 }

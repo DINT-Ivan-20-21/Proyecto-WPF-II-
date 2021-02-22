@@ -33,7 +33,7 @@ namespace Proyecto_WPF__II_
 
         private void LimpiarCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _vm.PuedeLimpiarSeleccion();
+            e.CanExecute = _vm != null && _vm.PuedeLimpiarSeleccion();
         }
 
         private void VenderCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -52,7 +52,7 @@ namespace Proyecto_WPF__II_
 
         private void VenderCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _vm.PuedeVender();
+            e.CanExecute = _vm != null && _vm.PuedeVender();
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -138,8 +138,6 @@
                         Width="230"
                         Margin="5,5"
                         VerticalAlignment="Top">
-                <TextBlock Text="{Binding Path=ModoSala}"
-                           TextAlignment="Center" />
                 <TextBox materialDesign:HintAssist.Hint="Número"
                          Text="{Binding Path=SalaFormulario.Numero}" />
                 <TextBox materialDesign:HintAssist.Hint="Capacidad"
@@ -189,9 +187,6 @@
             <DockPanel DockPanel.Dock="Right"
                        Width="230"
                        Margin="5,5">
-                <TextBlock DockPanel.Dock="Top"
-                           Text="{Binding Path=ModoSala}"
-                           TextAlignment="Center" />
                 <materialDesign:TimePicker DockPanel.Dock="Top"
                                            materialDesign:HintAssist.Hint="Seleccione la hora"
                                            Is24Hours="True"
