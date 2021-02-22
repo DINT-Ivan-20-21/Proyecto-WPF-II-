@@ -80,7 +80,7 @@
                         Margin="5">
                 <TextBlock Style="{StaticResource Etiqueta}"
                            Text="Selecciona la sesión" />
-                <ComboBox ItemsSource="{Binding Path=Sesiones}"
+                <ComboBox ItemsSource="{Binding Path=Sesiones, Mode=OneWay}"
                           SelectedItem="{Binding Path=SesionSeleccionada}"
                           Margin="0,0,0,10">
                     <ComboBox.ItemTemplate>
@@ -90,10 +90,10 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <StackPanel IsEnabled="{Binding Path=Disponibles}">
+                <StackPanel IsEnabled="{Binding Path=Disponibles, Mode=OneWay}">
                     <TextBlock Style="{StaticResource Etiqueta}">
                     <Run Text="Hay " />
-                    <Run Text="{Binding Path=Disponibles}"
+                    <Run Text="{Binding Path=Disponibles, Mode=OneWay}"
                          FontWeight="Black" />
                     <Run Text=" entradas disponibles" />
                     </TextBlock>

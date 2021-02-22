@@ -19,7 +19,6 @@ namespace Proyecto_WPF__II_.ViewModel
 
         //Salas
         public ObservableCollection<Sala> Salas { get; set; }
-
         private Sala _salaSeleccionada;
         public Sala SalaSeleccionada
         {
@@ -27,17 +26,7 @@ namespace Proyecto_WPF__II_.ViewModel
             set
             {
                 _salaSeleccionada = value;
-                if (_salaSeleccionada != null)
-                {
-                    try
-                    {
-                        Sesiones = _bd.BuscaSesionesPorSala(_salaSeleccionada.Id);
-                    }
-                    catch (SqliteException)
-                    {
-                        Sesiones = null;
-                    }
-                }
+                ActualizaSesiones();
             }
         }
         public Sala SalaFormulario { get; set; }
@@ -114,8 +103,8 @@ namespace Proyecto_WPF__II_.ViewModel
             }
 
             ModoSesion = Modo.Añadir;
-            Sesiones = _bd.LeerSesiones();
             SesionSeleccionada = null;
+            ActualizaSesiones();
         }
 
         public string CambiarModoSesion()
@@ -133,17 +122,29 @@ namespace Proyecto_WPF__II_.ViewModel
         public void EliminarSesion()
         {
             _bd.Eliminar(SesionSeleccionada);
-            Sesiones = _bd.LeerSesiones();
+            ActualizaSesiones();
         }
 
         public bool PuedeInsertarSesion()
         {
-            return SalaSeleccionada != null && SalaSeleccionada.Disponible && !Maximo && SesionFormulario.Pelicula != null;
+            return SalaSeleccionada != null && SalaSeleccionada.Disponible && (!Maximo || ModoSesion == Modo.Modificar) && SesionFormulario.Pelicula != null;
         }
 
         public bool PuedeEliminarSesion()
         {
             return SesionSeleccionada != null;
+        }
+
+        private void ActualizaSesiones()
+        {
+            try
+            {
+                Sesiones = SalaSeleccionada != null ? _bd.BuscaSesionesPorSala(SalaSeleccionada.Id) : new ObservableCollection<Sesion>();
+            }
+            catch (SqliteException)
+            {
+                Sesiones = new ObservableCollection<Sesion>();
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

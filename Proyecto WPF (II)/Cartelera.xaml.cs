@@ -1,4 +1,6 @@
-﻿using Proyecto_WPF__II_.ViewModel;
+﻿using Microsoft.Data.Sqlite;
+using Proyecto_WPF__II_.ViewModel;
+using System;
 using System.Windows;
 
 namespace Proyecto_WPF__II_
@@ -11,7 +13,19 @@ namespace Proyecto_WPF__II_
         private ViewModelCartelera _vm;
         public Cartelera()
         {
-            _vm = new ViewModelCartelera();
+            try
+            {
+                _vm = new ViewModelCartelera();
+            }
+            catch (SqliteException)
+            {
+                MessageBox.Show("No se pudo acceder a la base de datos", "advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("No se pudo acceder a la cartelera", "advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
             InitializeComponent();
             DataContext = _vm;
         }

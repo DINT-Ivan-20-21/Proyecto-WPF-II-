@@ -201,7 +201,13 @@
                          SelectedItem="{Binding Path=SesionFormulario.Pelicula}"
                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                          ScrollViewer.VerticalScrollBarVisibility="Visible"
-                         Margin="0,5,0,0" />
+                         Margin="0,5,0,0">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel  Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
 
             </DockPanel>
             <DataGrid ItemsSource="{Binding Path=Sesiones}"

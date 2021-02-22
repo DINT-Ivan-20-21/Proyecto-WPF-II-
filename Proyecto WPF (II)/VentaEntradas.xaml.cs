@@ -1,4 +1,5 @@
-﻿using Proyecto_WPF__II_.ViewModel;
+﻿using Microsoft.Data.Sqlite;
+using Proyecto_WPF__II_.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,7 +14,14 @@ namespace Proyecto_WPF__II_
         ViewModelVentaEntradas _vm;
         public VentaEntradas()
         {
-            _vm = new ViewModelVentaEntradas();
+            try
+            {
+                _vm = new ViewModelVentaEntradas();
+            } catch (SqliteException)
+            {
+                MostrarAdvertencia("Error al acceder a la base de datos");
+            }
+
             InitializeComponent();
             DataContext = _vm;
         }
@@ -30,7 +38,15 @@ namespace Proyecto_WPF__II_
 
         private void VenderCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            _vm.Vender();
+            try
+            {
+                _vm.Vender();
+            }
+            catch (SqliteException)
+            {
+                MostrarAdvertencia("Error al insertar en la base de datos");
+            }
+
             _vm.LimpiarSeleccion();
         }
 
@@ -42,6 +58,11 @@ namespace Proyecto_WPF__II_
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _vm.LimpiarFormulario();
+        }
+
+        private void MostrarAdvertencia(string mensaje)
+        {
+            MessageBox.Show(mensaje, "advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 }
