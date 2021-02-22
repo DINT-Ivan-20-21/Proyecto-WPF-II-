@@ -16,7 +16,7 @@ namespace Proyecto_WPF__II_.Servicio
             //Comprobamos si es la primera ejecucion
             if (DateTime.Parse(Properties.Settings.Default.lastUpdate).Date != DateTime.Now.Date)
             {
-
+                _conexion.Open();
                 //Cogemos las peliculas nuevas
                 foreach (Pelicula pelicula in ApiRestService.GetCartelera())
                 {
@@ -28,6 +28,8 @@ namespace Proyecto_WPF__II_.Servicio
 
                 //Borrarmos las ventas
                 EliminarVentas();
+
+                _conexion.Close();
 
                 Properties.Settings.Default.lastUpdate = DateTime.Now.ToShortDateString();
                 Properties.Settings.Default.Save();
@@ -390,13 +392,10 @@ namespace Proyecto_WPF__II_.Servicio
 
         private void EliminarVentas()
         {
-            _conexion.Open();
             SqliteCommand _comando = _conexion.CreateCommand();
 
-            _comando.CommandText = "TRUNCATE TABLE ventas";
+            _comando.CommandText = "DELETE FROM ventas";
             _comando.ExecuteNonQuery();
-
-            _conexion.Close();
         }
 
         public void Eliminar(Sesion sesion)

@@ -11,16 +11,9 @@ namespace Proyecto_WPF__II_.Comando
             null
         );
 
-        public static readonly RoutedUICommand AñadirSala = new RoutedUICommand(
-           "Añadir Sala",
-           "Añadir Sala",
-           typeof(ComandosSalasSesiones),
-           null
-       );
-
-        public static readonly RoutedUICommand ModificarSala = new RoutedUICommand(
-           "Modificar Sala",
-           "Modificar Sala",
+        public static readonly RoutedUICommand AccionSala = new RoutedUICommand(
+           "Accion Sala",
+           "Accion Sala",
            typeof(ComandosSalasSesiones),
            null
        );
@@ -32,16 +25,9 @@ namespace Proyecto_WPF__II_.Comando
            null
        );
 
-        public static readonly RoutedUICommand AñadirSesion = new RoutedUICommand(
-           "Añadir Sesion",
-           "Añadir Sesion",
-           typeof(ComandosSalasSesiones),
-           null
-       );
-
-        public static readonly RoutedUICommand ModificarSesion = new RoutedUICommand(
-           "Modificar Sesion",
-           "Modificar Sesion",
+        public static readonly RoutedUICommand AccionSesion = new RoutedUICommand(
+           "Accion Sesion",
+           "Accion Sesion",
            typeof(ComandosSalasSesiones),
            null
        );

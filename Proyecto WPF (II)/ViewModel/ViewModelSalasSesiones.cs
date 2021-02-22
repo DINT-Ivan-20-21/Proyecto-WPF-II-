@@ -1,4 +1,5 @@
-﻿using Proyecto_WPF__II_.Modelo;
+﻿using Microsoft.Data.Sqlite;
+using Proyecto_WPF__II_.Modelo;
 using Proyecto_WPF__II_.Servicio;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,10 @@ namespace Proyecto_WPF__II_.ViewModel
     {
         public enum Modo { Añadir, Modificar }
 
+        public ObservableCollection<Pelicula> Peliculas { get; set; }
+
+        private readonly SQLiteService _bd;
+
         //Salas
         public ObservableCollection<Sala> Salas { get; set; }
 
@@ -21,54 +26,31 @@ namespace Proyecto_WPF__II_.ViewModel
             get => _salaSeleccionada;
             set
             {
-                if (_salaSeleccionada == null)
+                _salaSeleccionada = value;
+                if (_salaSeleccionada != null)
                 {
-                    _salaSeleccionada = value;
-                }
-                else if (value != null && !_salaSeleccionada.Equals(value))
-                {
-                    _salaSeleccionada = value;
-                    Sesiones = _bd.BuscaSesionesPorSala(_salaSeleccionada.Id);
-                    Maximo = Sesiones.Count >= 3;
-                    SesionSeleccionada = new Sesion(SalaSeleccionada);
+                    try
+                    {
+                        Sesiones = _bd.BuscaSesionesPorSala(_salaSeleccionada.Id);
+                    }
+                    catch (SqliteException)
+                    {
+                        Sesiones = null;
+                    }
                 }
             }
         }
         public Sala SalaFormulario { get; set; }
-
-        private Modo _modoSala;
-        public Modo ModoSala
-        {
-            get => _modoSala;
-            set
-            {
-                _modoSala = value;
-                SalaFormulario = (ModoSala == Modo.Añadir) ? new Sala() : new Sala(SalaSeleccionada);
-            }
-        }
-
+        public Modo ModoSala { get; set; }
 
         //Sesiones
         public ObservableCollection<Sesion> Sesiones { get; set; }
         public Sesion SesionSeleccionada { get; set; }
         public Sesion SesionFormulario { get; set; }
 
-        private Modo _modoSesion;
-        public Modo ModoSesion
-        {
-            get => _modoSesion;
-            set
-            {
-                _modoSesion = value;
-                SesionFormulario = (ModoSesion == Modo.Añadir) ? new Sesion(SalaSeleccionada) : new Sesion(SesionSeleccionada);
-            }
-        }
+        public Modo ModoSesion { get; set; }
 
-        public bool Maximo { get; set; }
-
-        public ObservableCollection<Pelicula> Peliculas { get; set; }
-
-        private readonly SQLiteService _bd;
+        public bool Maximo { get => Sesiones != null && Sesiones.Count >= 3; }
 
         public ViewModelSalasSesiones()
         {
@@ -81,6 +63,7 @@ namespace Proyecto_WPF__II_.ViewModel
             SesionFormulario = new Sesion();
         }
 
+        //Métodos salas
         public void InsertarSala()
         {
             if (ModoSala == Modo.Añadir)
@@ -95,9 +78,28 @@ namespace Proyecto_WPF__II_.ViewModel
 
             ModoSala = Modo.Añadir;
             Salas = _bd.LeerSalas();
-            SalaSeleccionada = new Sala();
+            SalaSeleccionada = null;
         }
 
+        public string CambiarModoSala()
+        {
+            if (SalaSeleccionada == null && ModoSala == Modo.Añadir)
+            {
+                return "Necesita seleccionar una sala para poder modificarla";
+            }
+
+            ModoSala = ModoSala == Modo.Añadir ? Modo.Modificar : Modo.Añadir;
+
+            SalaFormulario = (ModoSala == Modo.Añadir) ? new Sala() : new Sala(SalaSeleccionada);
+            return null;
+        }
+
+        public bool PuedeInsertarSala()
+        {
+            return SalaFormulario.Capacidad != 0 && (!_bd.ExisteNumeroSala(SalaFormulario.Numero) || ModoSala == Modo.Modificar);
+        }
+
+        //Métodos sesiones
         public void InsertarSesion()
         {
             if (ModoSesion == Modo.Añadir)
@@ -113,7 +115,19 @@ namespace Proyecto_WPF__II_.ViewModel
 
             ModoSesion = Modo.Añadir;
             Sesiones = _bd.LeerSesiones();
-            SesionSeleccionada = new Sesion();
+            SesionSeleccionada = null;
+        }
+
+        public string CambiarModoSesion()
+        {
+            if (SesionSeleccionada == null && ModoSesion == Modo.Añadir)
+            {
+                return "Necesita seleccionar una sesion para poder modificarla";
+            }
+
+            ModoSesion = ModoSesion == Modo.Añadir ? Modo.Modificar : Modo.Añadir;
+            SesionFormulario = (ModoSesion == Modo.Añadir) ? new Sesion(SalaSeleccionada) : new Sesion(SesionSeleccionada);
+            return null;
         }
 
         public void EliminarSesion()
@@ -122,24 +136,14 @@ namespace Proyecto_WPF__II_.ViewModel
             Sesiones = _bd.LeerSesiones();
         }
 
-        public bool PuedeInsertarSala()
-        {
-            return SalaFormulario.Capacidad != 0 && (!_bd.ExisteNumeroSala(SalaFormulario.Numero) || ModoSala == Modo.Modificar);
-        }
-
         public bool PuedeInsertarSesion()
         {
             return SalaSeleccionada != null && SalaSeleccionada.Disponible && !Maximo && SesionFormulario.Pelicula != null;
         }
 
-        public bool PuedeUsarSala()
+        public bool PuedeEliminarSesion()
         {
-            return SalaSeleccionada != null && !SalaSeleccionada.Equals(new Sala());
-        }
-
-        public bool PuedeUsarSesion()
-        {
-            return SesionSeleccionada != null && SalaSeleccionada.Disponible && !SesionSeleccionada.Equals(new Sesion()) && PuedeUsarSala();
+            return SesionSeleccionada != null;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

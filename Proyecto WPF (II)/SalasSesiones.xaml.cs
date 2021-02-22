@@ -1,4 +1,5 @@
-﻿using Proyecto_WPF__II_.ViewModel;
+﻿using Microsoft.Data.Sqlite;
+using Proyecto_WPF__II_.ViewModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -10,41 +11,32 @@ namespace Proyecto_WPF__II_
     public partial class SalasSesiones : Window
     {
         private ViewModelSalasSesiones _vm;
+
         public SalasSesiones()
         {
-            _vm = new ViewModelSalasSesiones();
+            try
+            {
+                _vm = new ViewModelSalasSesiones();
+            }
+            catch (SqliteException)
+            {
+                MostrarAdvertencia("Error en la base de datos");
+            }
+
             InitializeComponent();
             DataContext = _vm;
         }
 
+        //Salas
         private void InsertarSalaCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            _vm.InsertarSala();
-        }
-        private void AñadirSalaCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            _vm.ModoSala = ViewModelSalasSesiones.Modo.Añadir;
-        }
-        private void ModificarSalaCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            _vm.ModoSala = ViewModelSalasSesiones.Modo.Modificar;
-        }
-
-        private void InsertarSesionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            _vm.InsertarSesion();
-        }
-        private void AñadirSesionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            _vm.ModoSesion = ViewModelSalasSesiones.Modo.Añadir;
-        }
-        private void ModificarSesionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            _vm.ModoSesion = ViewModelSalasSesiones.Modo.Modificar;
-        }
-        private void EliminarSesionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            _vm.EliminarSesion();
+            try
+            {
+                _vm.InsertarSala();
+            } catch (SqliteException sqle)
+            {
+                MostrarAdvertencia(sqle.Message);
+            }
         }
 
         private void InsertarSalaCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -52,19 +44,56 @@ namespace Proyecto_WPF__II_
             e.CanExecute = _vm.PuedeInsertarSala();
         }
 
+        private void AccionSalaCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            string mensaje = _vm.CambiarModoSala();
+
+            if (mensaje != null)
+            {
+                MostrarAdvertencia(mensaje);
+            }
+        }
+
+        //Sesiones
+        private void InsertarSesionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                _vm.InsertarSesion();
+            }
+            catch (SqliteException sqle)
+            {
+                MostrarAdvertencia(sqle.Message);
+            }
+        }
         private void InsertarSesionCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = _vm.PuedeInsertarSesion();
         }
 
-        private void UsarSesionCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void AccionSesionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            e.CanExecute = _vm.PuedeUsarSesion();
+            string mensaje = _vm.CambiarModoSesion();
+
+            if(mensaje != null)
+            {
+                MostrarAdvertencia(mensaje);
+            }
         }
 
-        private void UsarSalaCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void EliminarSesionCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            e.CanExecute = _vm.PuedeUsarSala();
+            _vm.EliminarSesion();
+        }
+
+        private void EliminarSesionCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _vm.PuedeEliminarSesion();
+        }
+
+        private void MostrarAdvertencia(string mensaje)
+        {
+            MessageBox.Show(mensaje, "advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 }

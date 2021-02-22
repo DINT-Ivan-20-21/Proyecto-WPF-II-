@@ -15,27 +15,22 @@
         MinWidth="800"
         Width="800">
     <Window.CommandBindings>
+        <!-- Comandos sala-->
         <CommandBinding Command="comando:ComandosSalasSesiones.InsertarSala"
                         Executed="InsertarSalaCommandBinding_Executed"
                         CanExecute="InsertarSalaCommandBinding_CanExecute" />
-        <CommandBinding Command="comando:ComandosSalasSesiones.ModificarSala"
-                        Executed="ModificarSalaCommandBinding_Executed"
-                        CanExecute="UsarSalaCommandBinding_CanExecute" />
-        <CommandBinding Command="comando:ComandosSalasSesiones.AñadirSala"
-                        Executed="AñadirSalaCommandBinding_Executed" />
+        <CommandBinding Command="comando:ComandosSalasSesiones.AccionSala"
+                        Executed="AccionSalaCommandBinding_Executed" />
 
+        <!-- Comandos sesion-->
         <CommandBinding Command="comando:ComandosSalasSesiones.InsertarSesion"
                         Executed="InsertarSesionCommandBinding_Executed"
                         CanExecute="InsertarSesionCommandBinding_CanExecute" />
-        <CommandBinding Command="comando:ComandosSalasSesiones.ModificarSesion"
-                        Executed="ModificarSesionCommandBinding_Executed"
-                        CanExecute="UsarSesionCommandBinding_CanExecute" />
-        <CommandBinding Command="comando:ComandosSalasSesiones.AñadirSesion"
-                        Executed="AñadirSesionCommandBinding_Executed"
-                        CanExecute="UsarSesionCommandBinding_CanExecute" />
+        <CommandBinding Command="comando:ComandosSalasSesiones.AccionSesion"
+                        Executed="AccionSesionCommandBinding_Executed" />
         <CommandBinding Command="comando:ComandosSalasSesiones.EliminarSesion"
                         Executed="EliminarSesionCommandBinding_Executed"
-                        CanExecute="UsarSesionCommandBinding_CanExecute" />
+                        CanExecute="EliminarSesionCommandBinding_CanExecute" />
     </Window.CommandBindings>
     <Window.Resources>
         <!-- Botonera -->
@@ -131,10 +126,8 @@
         <DockPanel Grid.Row="0">
             <DockPanel DockPanel.Dock="Bottom">
                 <StackPanel Style="{StaticResource Botones}">
-                    <Button Content="Añadir"
-                            Command="comando:ComandosSalasSesiones.AñadirSala" />
-                    <Button Content="Modificar"
-                            Command="comando:ComandosSalasSesiones.ModificarSala" />
+                    <Button Content="{Binding Path=ModoSala}"
+                            Command="comando:ComandosSalasSesiones.AccionSala" />
                 </StackPanel>
                 <Button Content="Insertar"
                         Command="comando:ComandosSalasSesiones.InsertarSala"
@@ -160,7 +153,7 @@
 
             </StackPanel>
             <DataGrid ItemsSource="{Binding Path=Salas}"
-                      SelectedItem="{Binding Path=SalaSeleccionada}">
+                      SelectedItem="{Binding Path=SalaSeleccionada, UpdateSourceTrigger=PropertyChanged}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Número"
                                         Width="*"
@@ -179,16 +172,15 @@
         <DockPanel Grid.Row="1">
             <DockPanel DockPanel.Dock="Bottom">
                 <StackPanel Style="{StaticResource Botones}">
-                    <Button Content="Añadir"
-                            Command="comando:ComandosSalasSesiones.AñadirSesion" />
-                    <Button Content="Modificar"
-                            Command="comando:ComandosSalasSesiones.ModificarSesion" />
+                    <Button Content="{Binding Path=ModoSesion}"
+                            Command="comando:ComandosSalasSesiones.AccionSesion" />
                     <Button Content="Eliminar"
                             Command="comando:ComandosSalasSesiones.EliminarSesion" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right">
-                    <TextBlock Style="{StaticResource MensajeMaximo}" Text="*Una sala no puede tener más de 3 sesiones" />
+                    <TextBlock Style="{StaticResource MensajeMaximo}"
+                               Text="*Una sala no puede tener más de 3 sesiones" />
                     <Button Content="Insertar"
                             Command="comando:ComandosSalasSesiones.InsertarSesion" />
                 </StackPanel>
